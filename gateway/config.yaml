@@ -1,0 +1,12 @@
+urls:
+  -
+    path: "/drivers/{id}/locations"
+    method: "PATCH"
+    nsq:
+      topic: "locations"
+  -
+    path: "/drivers/{id}"
+    method: "GET"
+    http:
+      host: "zombie-driver"
+      port: "8082"

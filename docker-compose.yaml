@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  gateway:
+    image: gateway
+    ports:
+      - "8080:8080"
+    links:
+      - zombie-driver:zombie-driver
+      - nsqd:nsqd
+    container_name: gateway
+
+  driver-location:
+    image: driver-location
+    links:
+      - redis:redis
+      - nsqlookupd:nsqlookupd
+    container_name: driver-location
+
+  zombie-driver:
+    image: zombie-driver
+    links:
+      - driver-location:driver-location
+    container_name: zombie-driver
+
+  redis:
+    image: redis:4.0.9-alpine
+    ports:
+      - "6379:6379"
+    container_name: driver_redis
+
+  nsqlookupd:
+    image: nsqio/nsq:v0.3.8
+    command: /nsqlookupd
+    ports:
+      - "4160:4160"
+      - "4161:4161"
+    container_name: driver_nsqlookupd
+
+  nsqd:
+    image: nsqio/nsq:v0.3.8
+    command: /nsqd --lookupd-tcp-address=nsqlookupd:4160
+    links:
+      - nsqlookupd:nsqlookupd
+    ports:
+      - "4150:4150"
+      - "4151:4151"
+    container_name: driver_nsqd
+
+  nsqadmin:
+    image: nsqio/nsq:v0.3.8
+    ports:
+      - "4171:4171"
+    links:
+      - nsqlookupd:nsqlookupd
+    command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
+    container_name: driver_nsqadmin
