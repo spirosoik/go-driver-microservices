@@ -1,3 +1,5 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/spirosoik/go-driver-microservices)](https://goreportcard.com/report/github.com/spirosoik/go-driver-microservices)
+
 ## Overview
 
 ![Architecture](architecture-overview.png)
